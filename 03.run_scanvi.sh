@@ -21,8 +21,7 @@ singularity exec --nv --bind /lustre,/nfs $IMAGE /bin/bash -c "nvidia-smi;cd ${W
  ./src/ovary/bin/run_scanvi.py \
   --h5ad_path data.lustre/atac/scanvi_out/combined_gene_matrix_plus_ref.h5ad \
   --h5ad_out data.lustre/atac/scanvi_out/combined_gene_matrix_plus_ref_scanvi_ds-dd_e1000.h5ad \
-  --batch_key dataset \
-  --categorical_covariate_keys dataset_donor \
+  --batch_key dataset_donor \
   --celltype_key coarse_annotation \
   --n_top_genes 5000 \
   --max_epochs 1000 \
