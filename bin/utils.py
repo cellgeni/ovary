@@ -13,15 +13,12 @@ def annotateByKnn(data,knn_key,ann_key):
     res.index = data.obs_names
     return res
 
-def getMajorAnn(ann,cl,is_ref):
-    d = pd.crosstab(ann[is_ref],cl[is_ref])
+def getMajorAnn(ann,cl):
+    d = pd.crosstab(ann,cl)
     res = pd.DataFrame({"cluster" : d.columns,
                     "major_ann" : [d.iloc[:,i].idxmax() for i in range(d.shape[1])],
                     "major_ann_cnt" : [d.iloc[:,i].max() for i in range(d.shape[1])],
-                    "ref_size" : d.sum(0)
+                    "total" : d.sum(0)
                    })
-    sizes = pd.crosstab(cl,is_ref)
-    res['query_size'] = sizes.loc[res.index,False]
-    res['major_frac'] = res.major_ann_cnt/res['ref_size']
-    res['query_frac'] = res['query_size']/(res['query_size']+res['ref_size'])
+    res['major_frac'] = res.major_ann_cnt/res['total']
     return res

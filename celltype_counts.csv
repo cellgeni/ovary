@@ -1,4 +1,4 @@
-coarse_annotation_bbknn,reference,atac,atac_odds,frac_diff,ncell_diff
+coarse_annotation_bbknn,reference,atac,atac_iodds,frac_diff,ncell_diff
 Granulosa_AMH,16194,29,0.0047969217034029244,-0.04733522477600241,-6017.0
 PV_SMC_Arterial,40477,11824,0.7824829282934285,-0.025859508304550444,-3287.0
 Granulosa_AMH_Atr,6853,11,0.00429962639424957,-0.020041397413943608,-2547.0
