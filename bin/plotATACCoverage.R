@@ -89,14 +89,14 @@ plotCoverages = function(covs,
   if(is.null(ylim))
     ylim = ylim_
   
-  par(mfrow=c(length(covs)+1,1),mar=c(0,4,1,1),bty='n')
+  par(mfrow=c(length(covs)+1,1),mar=c(0,6,1,1),bty='n')
   for(n in names(covs)){
     plotCoverage(covs[[n]],fill=fill,border = border,ylab=ylab,main=n,ylim=ylim,...)
     if(!is.null(region2mark))
       plotCoverage(covs[[n]],fill=fill_mark,border = border,ylab=ylab,main=n,
                    ylim=ylim,xlim=c(region2mark$start,region2mark$end),new=FALSE,...)
   }
-  par(mar=c(4,4,1,1))
+  par(mar=c(4,6,1,1))
   tr = gtf[gtf$chr_id==covs[[1]]$chr & gtf$start<covs[[1]]$x[length(covs[[1]]$x)] & gtf$stop>covs[[1]]$x[1] , ]
   plotTranscripts(tr,xlim=range(covs[[1]]$x))
   
