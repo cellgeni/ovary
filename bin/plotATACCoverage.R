@@ -79,7 +79,7 @@ plotCoverage = function(c,fill='gray',border=NA,ylab='#reads',ylim=range(c$cov,0
 plotCoverages = function(covs,
                          norm_factors=setNames(rep(1,length(covs)),names(covs)),
                          gtf,
-                         fill='gray',fill_mark='red',border=NA,ylab='#reads',
+                         fill='gray',fill_mark='red',border=NA,ylab='#reads',xlim=NULL,
                          region2mark=NULL,ylim=NULL,...){
   ylim_ = c(0,1e-10)
   for(n in names(covs)){
@@ -88,6 +88,13 @@ plotCoverages = function(covs,
   }
   if(is.null(ylim))
     ylim = ylim_
+  if(!is.null(xlim)){
+    for(n in names(covs)){
+      f = covs[[n]]$x>=xlim[1] & covs[[n]]$x<=xlim[2]
+      covs[[n]]$x = covs[[n]]$x[f]
+      covs[[n]]$cov = covs[[n]]$cov[f]
+    }
+  }
   
   par(mfrow=c(length(covs)+1,1),mar=c(0,6,1,1),bty='n')
   for(n in names(covs)){

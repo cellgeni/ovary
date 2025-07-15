@@ -76,6 +76,13 @@ def init_parser() -> argparse.ArgumentParser:
         default = 0.001
     )
     
+    parser.add_argument(
+        "--hgv_flavor",
+        type=str,
+        help="flavor for highly_variable_genes. Data will be log1p-ed for HVG (but not for integration) if not seurat_v3/seurat_v3_paper.",
+        default = 'seurat_v3'
+    )
+    
     return parser
 
 
@@ -89,13 +96,23 @@ def main():
     
     sc.pp.filter_genes(data, min_cells=5)
     
+    data.layers['original'] = data.X.copy()
+    
+    # log data for HGV in case flavor is not seurat_v3
+    if args.hgv_flavor not in {'seurat_v3','seurat_v3_paper'}:
+        sc.pp.log1p(data)
+    
     sc.pp.highly_variable_genes(
       data,
       n_top_genes = args.n_top_genes,
-      flavor="seurat_v3",
+      flavor=args.hgv_flavor,
       batch_key=args.batch_key,
       subset=True
     )
+    
+    # replace original expression back
+    data.X = data.layers['original']
+    del data.layers['original']
     
     pred_key = args.celltype_key + "_scanvi"
     
@@ -122,6 +139,7 @@ def main():
         vae.train(max_epochs=args.max_epochs, early_stopping=True,plan_kwargs={"lr": args.lr})    
         vae.save(dir_path=args.h5ad_out+"_scvi_mod")
     
+    # plot scvi train
     train_elbo = vae.history["elbo_train"][1:]
     test_elbo = vae.history["elbo_validation"]
     ax = train_elbo.plot()
@@ -133,6 +151,7 @@ def main():
     sc.tl.umap(data)
     data.obsm['X_scVI_umap'] = data.obsm['X_umap']
 
+    # scANVI
     lvae = scvi.model.SCANVI.from_scvi_model(
       vae,
       adata=data,

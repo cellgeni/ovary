@@ -28,12 +28,24 @@ IMAGE=/nfs/cellgeni/singularity/images/scvi-1.1.2.sif # _metrics.sif # with scvi
 #  --lr 0.0005"
 
 # pycistopic gene score
+#singularity exec --nv --bind /lustre,/nfs $IMAGE /bin/bash -c "nvidia-smi;cd ${WDIR}; \
+# ./actions/ovary/bin/run_scanvi.py \
+#  --h5ad_path data/combined_pycistopic_gene_matrix_plus_ref.h5ad \
+#  --h5ad_out work/scanvi_out/combined_pycistopic_gene_matrix_plus_ref_clean_scanvi.h5ad \
+#  --batch_key dataset_donor \
+#  --celltype_key coarse_annotation \
+#  --n_top_genes 5000 \
+#  --max_epochs 1000 \
+#  --lr 0.0005"
+
+# archr gene score use hgv_flavor seurat as it works on lognorm data, and archR gives only norm data
 singularity exec --nv --bind /lustre,/nfs $IMAGE /bin/bash -c "nvidia-smi;cd ${WDIR}; \
  ./actions/ovary/bin/run_scanvi.py \
-  --h5ad_path data/combined_pycistopic_gene_matrix_plus_ref.h5ad \
-  --h5ad_out work/scanvi_out/combined_pycistopic_gene_matrix_plus_ref_clean_scanvi.h5ad \
+  --h5ad_path work/archr/combined_archr_gene_matrix_plus_ref.h5ad \
+  --h5ad_out work/scanvi_out/combined_archr_gene_matrix_plus_ref_clean_scanvi.h5ad \
   --batch_key dataset_donor \
   --celltype_key coarse_annotation \
   --n_top_genes 5000 \
-  --max_epochs 1000 \
-  --lr 0.0005"
+  --max_epochs 2000 \
+  --hgv_flavor seurat \
+  --lr 0.0002"
